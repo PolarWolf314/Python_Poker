@@ -2,7 +2,9 @@
 # Created by Aaron Guo on 17/09/2021
 
 class User:
-    def __init__(self, name, money, card1, card2, big_blind, small_blind, dealer, playing):
+    def __init__(self, name, money, card1, card2,
+                 big_blind, small_blind, dealer,
+                 playing, player_order, bet_amount):
         self.name = name
         self.money = money
         self.card1 = card1
@@ -11,13 +13,17 @@ class User:
         self.small_blind = small_blind
         self.dealer = dealer
         self.playing = playing
+        self.player_order = player_order
+        self.bet_amount = bet_amount
 
     # Calculates the money that goes into a bet
     def money_calculation(self, bet):
         self.money = self.money - bet
+        self.bet_amount = self.bet_amount + bet
         if self.money < 0:
             print("Sorry, your balance is too low. Please try again")
             self.money = self.money + bet
+            self.bet_amount = self.bet_amount - bet
         return
 
     # Function that changes blinds around
@@ -34,9 +40,23 @@ class User:
             self.big_blind = True
         return self.big_blind, self.small_blind, self.dealer
 
+    # Function that fold the player
     def fold(self):
         self.playing = False
 
+    # Function that gives a player big blind
+    def give_big_blind(self):
+        self.big_blind = True
+
+    # Function that does all in
+    def all_in(self):
+        self.bet_amount = self.bet_amount + self.money
+        self.money = 0
+        print(self.name + " has gone all in. Good luck!")
+
+    # Function that orders the players
+    def reorder_player(self):
+        self.player_order = self.player_order + 1
 
 # test1 = User("Aaron", 500, "Ace of spades", "Ace of queens", False, False, False, True)
 # test1.money_calculation(300)
@@ -48,3 +68,5 @@ class User:
 # print(test1.money, test1.big_blind, test1.small_blind, test1.dealer, sep=' ')
 # test1.fold()
 # print(test1.playing)
+# test1.all_in()
+# print(test1.money)

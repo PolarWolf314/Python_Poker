@@ -44,47 +44,62 @@ def random_cards():
 blindsArray = numpy.zeros(shape=(numberOfUsers, 3), dtype='bool')
 for i in range(3):
     blindsArray[i][i] = True
-# print(blindsArray)
+
+# Assigning all values to people and storing in a list using object "User"
+currentCards = random_cards()
+playerValues = []
+for i in range(numberOfUsers):
+    playerValues.append(User(
+        userName[i], buyIn,
+        deckOfCards[(currentCards[3 + 2 * i])], deckOfCards[(currentCards[4 + 2 * i])],
+        blindsArray[i][0], blindsArray[i][1], blindsArray[i][2], True, (i + 1), 0
+    ))
+
+
+# A function that sorts out the moves player order by one
+def reorder():
+    for j in playerValues:  # Reorders the players inside the class
+        j.reorder_player()
+        if j.player_order == (numberOfUsers + 1):
+            j.player_order = 1
+    playerValues.sort(key=lambda x: x.player_order)
+
+
+# # Test code
+# for i in range(3):
+#     for j in playerValues:
+#         print(j.name, j.player_order)
+#     reorder()
+
 
 # Creating the game loop
-running = True
+running = False
 while running:
-    # Assigning all values to people and storing in a list using object "User"
-    currentCards = random_cards()
-    playerValues = []
-    for i in range(numberOfUsers):
-        playerValues.append(User(
-            userName[i], buyIn,
-            deckOfCards[(currentCards[3 + 2*i])], deckOfCards[(currentCards[4 + 2*i])],
-            blindsArray[i][0], blindsArray[i][1], blindsArray[i][2], True
-        ))
-
     # Loop to play a round
     while running:
         pot = 0
+        # Setting player order
+        reorder()
         # Making all players with blinds place their bets in the round
         for i in playerValues:
             if i.big_blind:
-                pot = pot + bigBlind
-                i.money_calculation(bigBlind)
+                if i.money <= bigBlind:  # Forcing all-in if not enough money
+                    pot = pot + i.money
+                    i.all_in()
+                else:
+                    pot = pot + bigBlind
+                    i.money_calculation(bigBlind)
             elif i.small_blind:
-                pot = pot + smallBlind
-                i.money_calculation(smallBlind)
-
-
-        #
-        #
-        # # Showing and asking each player if they want to check, raise, or fold
-        # for i in range(3): # Since each round can only have 3 iterations
-        #     for j in range(numberOfUsers): # Asking input and action from each user
-        #         # Checking if the player is currently playing
-        #         if playerValues[j][7]:
-        #             #
-        #
+                if i.money <= smallBlind:
+                    pot = pot + i.money
+                    i.all_in()
+                else:
+                    pot = pot + smallBlind
+                    i.money_calculation(smallBlind)
 
         # for i in playerValues:
-        #     print(i.name, i.money, i.card1, i.card2, i.big_blind, i.small_blind, i.dealer)
-        # break
+        #     print(i.name, i.money, i.card1, i.card2,
+        #           i.big_blind, i.small_blind, i.dealer,
+        #           i.playing, i.player_order)
+        break
     break
-
-
