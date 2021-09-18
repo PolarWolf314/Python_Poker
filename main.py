@@ -40,18 +40,26 @@ def random_cards():
     return random_array
 
 
+# A function that gets the cards from the deck using the randomised index
+def access_cards(cards):
+    card_array = []
+    for card in range(len(cards)):
+        card_array.append(cards[card])
+    return card_array
+
+
 # Initialising the blinds distribution
 blindsArray = numpy.zeros(shape=(numberOfUsers, 3), dtype='bool')
 for i in range(3):
     blindsArray[i][i] = True
 
 # Assigning all values to people and storing in a list using object "User"
-currentCards = random_cards()
+currentCards = access_cards([random_cards()])
 playerValues = []
 for i in range(numberOfUsers):
     playerValues.append(User(
         userName[i], buyIn,
-        deckOfCards[(currentCards[3 + 2 * i])], deckOfCards[(currentCards[4 + 2 * i])],
+        currentCards[3 + 2 * i], currentCards[4 + 2 * i],  # NEED TO FIX THIS
         blindsArray[i][0], blindsArray[i][1], blindsArray[i][2], True, (i + 1), 0
     ))
 
@@ -65,11 +73,11 @@ def reorder():
     playerValues.sort(key=lambda x: x.player_order)
 
 
-# # Test code
-# for i in range(3):
-#     for j in playerValues:
-#         print(j.name, j.player_order)
-#     reorder()
+# Test code
+for i in range(3):
+    for j in playerValues:
+        print(j.name, j.card1, j.card2, j.player_order)
+    reorder()
 
 
 # Creating the game loop
@@ -96,6 +104,18 @@ while running:
                 else:
                     pot = pot + smallBlind
                     i.money_calculation(smallBlind)
+
+        for i in range(3):  # There are only 3 steps in 1 round of poker
+            counter = 0
+            max_bet = bigBlind
+
+            for player in playerValues:
+                while player.bet_amount != max_bet:
+                    response = input("Please ")
+
+
+
+    # remember to give new cards
 
         # for i in playerValues:
         #     print(i.name, i.money, i.card1, i.card2,

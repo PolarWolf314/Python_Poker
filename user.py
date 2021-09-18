@@ -18,12 +18,11 @@ class User:
 
     # Calculates the money that goes into a bet
     def money_calculation(self, bet):
-        self.money = self.money - bet
-        self.bet_amount = self.bet_amount + bet
-        if self.money < 0:
+        if bet <= self.money:
+            self.money = self.money - bet
+            self.bet_amount = self.bet_amount + bet
+        else:
             print("Sorry, your balance is too low. Please try again")
-            self.money = self.money + bet
-            self.bet_amount = self.bet_amount - bet
         return
 
     # Function that changes blinds around
@@ -58,14 +57,19 @@ class User:
     def reorder_player(self):
         self.player_order = self.player_order + 1
 
-# test1 = User("Aaron", 500, "Ace of spades", "Ace of queens", False, False, False, True)
-# test1.money_calculation(300)
+
+# test1 = User("Aaron", 500, "Ace of spades", "Ace of queens",
+#              False, False, False, True, 1, 50)
+#
+# test1.money_calculation(500)
+
 # test1.blind_change()
 # print(test1.money, test1.big_blind, test1.small_blind, test1.dealer, sep=' ')
 # test1.blind_change()
 # print(test1.money, test1.big_blind, test1.small_blind, test1.dealer, sep=' ')
 # test1.blind_change()
 # print(test1.money, test1.big_blind, test1.small_blind, test1.dealer, sep=' ')
+
 # test1.fold()
 # print(test1.playing)
 # test1.all_in()
