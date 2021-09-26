@@ -76,13 +76,14 @@ def reorder():
 
 # A function that asks what a player wants to do and acts accordingly
 def askPlayer(player, betAmount):
-    if playerValues[player, 8] == 1:
-        print("lol nah")
-    elif playerValues[player, 8] == 2:
-        print("aight ur still in the game")
-    else:
-        print(betAmount)
+    if player.status == 3:
+        player.money_calculation(betAmount)
 
+
+# # Test code to test askPlayer()
+# for i in playerValues:
+#     askPlayer(i, 50)
+#     print(i.money)
 
 # Test code to rest reorder()
 # for i in range(3):
@@ -119,11 +120,13 @@ while running:
         for i in range(3):  # There are only 3 steps in 1 round of poker
             counter = 0
             max_bet = bigBlind
+            playerIndex = 0
+            currentPlayer = playerIndex in playerValues
 
-            # if playerValues[1, 8]
-            #     for player in playerValues:
-            #         while player.bet_amount != max_bet:
-            #             response = input("Please ")
+            if currentPlayer.bet_amount != max_bet:
+                for player in playerValues:
+                    while player.bet_amount != max_bet:
+                        response = input("Please ")
 
         # remember to give new cards
 
