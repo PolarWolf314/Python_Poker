@@ -4,17 +4,17 @@
 class User:
     def __init__(self, name, money, card1, card2,
                  big_blind, small_blind, dealer,
-                 playing, player_order, bet_amount):
-        self.name = name
-        self.money = money
+                 status, player_order, bet_amount):
+        self.name = name  # Username
+        self.money = money  # The amount of money that user has
         self.card1 = card1
         self.card2 = card2
-        self.big_blind = big_blind
-        self.small_blind = small_blind
-        self.dealer = dealer
-        self.playing = playing
-        self.player_order = player_order
-        self.bet_amount = bet_amount
+        self.big_blind = big_blind  # If they have big blind active or not
+        self.small_blind = small_blind  # If they have small blind active
+        self.dealer = dealer  # If they have dealer active
+        self.status = status  # Are they folded, checked, or raised? 1, 2, 3 respectively
+        self.player_order = player_order  # Who gets to go first etc
+        self.bet_amount = bet_amount  # How much money this play has currently bet
 
     # Calculates the money that goes into a bet
     def money_calculation(self, bet):
@@ -41,7 +41,7 @@ class User:
 
     # Function that fold the player
     def fold(self):
-        self.playing = False
+        self.status = 1
 
     # Function that gives a player big blind
     def give_big_blind(self):

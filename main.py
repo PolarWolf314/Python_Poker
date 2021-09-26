@@ -32,19 +32,15 @@ while smallBlind >= bigBlind:
 # Making a function that creates a random array for cards
 def random_cards():
     random_array = []
+    card_array = []
     # Ensuring no repeats occur
     while len(random_array) < (2 * numberOfUsers + 5):
         r = random.randint(0, 51)
         if r not in random_array:
             random_array.append(r)
-    return random_array
-
-
-# A function that gets the cards from the deck using the randomised index
-def access_cards(cards):
-    card_array = []
-    for card in range(len(cards)):
-        card_array.append(cards[card])
+    # Extracting cards from deckOfCards
+    for i in range(len(random_array)):
+        card_array.append(deckOfCards[random_array[i]])
     return card_array
 
 
@@ -53,14 +49,19 @@ blindsArray = numpy.zeros(shape=(numberOfUsers, 3), dtype='bool')
 for i in range(3):
     blindsArray[i][i] = True
 
+# # Test code to test random_cards()
+# r = random_cards()
+# print(r)
+
+
 # Assigning all values to people and storing in a list using object "User"
-currentCards = access_cards([random_cards()])
+currentCards = random_cards()
 playerValues = []
 for i in range(numberOfUsers):
     playerValues.append(User(
         userName[i], buyIn,
-        currentCards[3 + 2 * i], currentCards[4 + 2 * i],  # NEED TO FIX THIS
-        blindsArray[i][0], blindsArray[i][1], blindsArray[i][2], True, (i + 1), 0
+        currentCards[3 + 2 * i], currentCards[4 + 2 * i],
+        blindsArray[i][0], blindsArray[i][1], blindsArray[i][2], 3, (i + 1), 0
     ))
 
 
@@ -73,11 +74,21 @@ def reorder():
     playerValues.sort(key=lambda x: x.player_order)
 
 
-# Test code
-for i in range(3):
-    for j in playerValues:
-        print(j.name, j.card1, j.card2, j.player_order)
-    reorder()
+# A function that asks what a player wants to do and acts accordingly
+def askPlayer(player, betAmount):
+    if playerValues[player, 8] == 1:
+        print("lol nah")
+    elif playerValues[player, 8] == 2:
+        print("aight ur still in the game")
+    else:
+        print(betAmount)
+
+
+# Test code to rest reorder()
+# for i in range(3):
+#     for j in playerValues:
+#         print(j.name, j.card1, j.card2, j.player_order)
+#     reorder()
 
 
 # Creating the game loop
@@ -94,14 +105,14 @@ while running:
                 if i.money <= bigBlind:  # Forcing all-in if not enough money
                     pot = pot + i.money
                     i.all_in()
-                else:
+                else:  # Otherwise, force add big blind amount
                     pot = pot + bigBlind
                     i.money_calculation(bigBlind)
-            elif i.small_blind:
+            elif i.small_blind:  # Forcing all in
                 if i.money <= smallBlind:
                     pot = pot + i.money
                     i.all_in()
-                else:
+                else:  # Otherwise, force add small blind amount
                     pot = pot + smallBlind
                     i.money_calculation(smallBlind)
 
@@ -109,17 +120,16 @@ while running:
             counter = 0
             max_bet = bigBlind
 
-            for player in playerValues:
-                while player.bet_amount != max_bet:
-                    response = input("Please ")
+            # if playerValues[1, 8]
+            #     for player in playerValues:
+            #         while player.bet_amount != max_bet:
+            #             response = input("Please ")
 
-
-
-    # remember to give new cards
+        # remember to give new cards
 
         # for i in playerValues:
         #     print(i.name, i.money, i.card1, i.card2,
         #           i.big_blind, i.small_blind, i.dealer,
-        #           i.playing, i.player_order)
+        #           i.status, i.player_order)
         break
     break
