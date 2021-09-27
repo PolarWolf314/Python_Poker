@@ -13,7 +13,7 @@ while numberOfUsers > 10 | numberOfUsers < 3:
     if numberOfUsers > 10:
         print("Sorry, that is too many users. Max number of users is 10.")
     else:
-        print("Sorry, that is too few users. Min number of users is 4.")
+        print("Sorry, that is too few users. Min number of users is 3.")
     numberOfUsers = int(input("Please enter the number of users: "))
 
 # Getting and storing the names of all the users
