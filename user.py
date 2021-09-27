@@ -21,6 +21,7 @@ class User:
         if bet <= self.money:
             self.money = self.money - bet
             self.bet_amount = self.bet_amount + bet
+            print("You now have $" + str(self.money) + " left")
         else:
             print("Sorry, your balance is too low. Please try again")
         return

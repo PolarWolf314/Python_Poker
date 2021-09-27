@@ -74,10 +74,12 @@ def reorder():
     playerValues.sort(key=lambda x: x.player_order)
 
 
-# A function that asks what a player wants to do and acts accordingly
-def askPlayer(player, betAmount):
-    if player.status == 3:
-        player.money_calculation(betAmount)
+# A function that updates the pot and player status
+def askPlayer(player, betAmount, pot):
+    pot += betAmount
+    player.status = 2  # Means the current player has checked
+    player.bet_amount += betAmount  # Updating current player bet
+    return pot
 
 
 # # Test code to test askPlayer()
@@ -91,9 +93,13 @@ def askPlayer(player, betAmount):
 #         print(j.name, j.card1, j.card2, j.player_order)
 #     reorder()
 
+# # Test code to work out indexing a list with objects
+# playerIndex = 0
+# currentPlayer = playerValues[playerIndex]
+# print(currentPlayer.money)
 
 # Creating the game loop
-running = False
+running = True
 while running:
     # Loop to play a round
     while running:
@@ -108,7 +114,7 @@ while running:
                     i.all_in()
                 else:  # Otherwise, force add big blind amount
                     pot = pot + bigBlind
-                    i.money_calculation(bigBlind)
+                    i.money_calculation(bigBlind)  # fix this
             elif i.small_blind:  # Forcing all in
                 if i.money <= smallBlind:
                     pot = pot + i.money
@@ -121,12 +127,61 @@ while running:
             counter = 0
             max_bet = bigBlind
             playerIndex = 0
-            currentPlayer = playerIndex in playerValues
+            currentPlayer = playerValues[playerIndex]
 
-            if currentPlayer.bet_amount != max_bet:
-                for player in playerValues:
-                    while player.bet_amount != max_bet:
-                        response = input("Please ")
+            # While loop that checks 2 conditions before moving out of loop
+            while not (currentPlayer.bet_amount == max_bet & currentPlayer.status != 3):
+
+                # Printing the name, balance, and game status for the current player
+                print("Hello " + currentPlayer.name + ", the money in the pot right now is " + str(pot))
+                print("You currently have $" + str(currentPlayer.money))
+                if currentPlayer.big_blind:
+                    print("You are currently the big blind")
+                elif currentPlayer.small_blind:
+                    print("You are currently the small blind")
+                elif currentPlayer.dealer:
+                    print("You are currently the dealer")
+
+                # Asking what the player wants to do
+                status = input("Do you want to raise, check, or fold? (type your answer, no spaces please) \n")
+                status = status.lower()
+
+                # Checking if the input is valid
+                while not (status == "raise" or status == "check" or status == "fold"):
+                    print("man can u even spell or read")
+                    status = input("Do you want to raise, check, or fold? (type your answer, no spaces please) \n")
+
+                # What happens if the player wants to raise
+                if status == "raise":
+                    betAmount = int(input("How much would you like to bet: "))
+
+                    # If the amount bet is too high, ask again
+                    while betAmount > currentPlayer.money or betAmount < max_bet:
+                        print("try again")  # fix this
+                        betAmount = int(input("How much would you like to bet: "))
+                        if betAmount == currentPlayer.money and betAmount <= currentPlayer.money:
+                            currentPlayer.all_in()
+                            pot = askPlayer(currentPlayer, betAmount, pot)
+                            max_bet = max_bet + betAmount
+                        elif betAmount <= currentPlayer.money:
+                            currentPlayer.money_calculation(betAmount)
+                            pot = askPlayer(currentPlayer, betAmount, pot)
+                            max_bet = max_bet + betAmount
+
+                    # Adding the bet to the pot and subtracting from the player
+                    if betAmount == currentPlayer.money and currentPlayer.status == 3:
+                        currentPlayer.all_in()
+                        pot = askPlayer(currentPlayer, betAmount, pot)
+                    elif currentPlayer.status == 3:
+                        currentPlayer.money_calculation(betAmount)
+                        pot = askPlayer(currentPlayer, betAmount, pot)
+                    max_bet = max_bet + betAmount
+
+                # Iterating through all players until both conditions are met
+                playerIndex = playerIndex + 1
+                if playerIndex >= numberOfUsers:
+                    playerIndex = 0
+                currentPlayer = playerValues[playerIndex]
 
         # remember to give new cards
 
