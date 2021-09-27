@@ -110,17 +110,17 @@ while running:
         for i in playerValues:
             if i.big_blind:
                 if i.money <= bigBlind:  # Forcing all-in if not enough money
-                    pot = pot + i.money
+                    pot += i.money
                     i.all_in()
                 else:  # Otherwise, force add big blind amount
-                    pot = pot + bigBlind
+                    pot += bigBlind
                     i.money_calculation(bigBlind)  # fix this
             elif i.small_blind:  # Forcing all in
                 if i.money <= smallBlind:
-                    pot = pot + i.money
+                    pot += i.money
                     i.all_in()
                 else:  # Otherwise, force add small blind amount
-                    pot = pot + smallBlind
+                    pot += smallBlind
                     i.money_calculation(smallBlind)
 
         for i in range(3):  # There are only 3 steps in 1 round of poker
@@ -162,11 +162,11 @@ while running:
                         if betAmount == currentPlayer.money and betAmount <= currentPlayer.money:
                             currentPlayer.all_in()
                             pot = askPlayer(currentPlayer, betAmount, pot)
-                            max_bet = max_bet + betAmount
+                            max_bet += betAmount
                         elif betAmount <= currentPlayer.money:
                             currentPlayer.money_calculation(betAmount)
                             pot = askPlayer(currentPlayer, betAmount, pot)
-                            max_bet = max_bet + betAmount
+                            max_bet += betAmount
 
                     # Adding the bet to the pot and subtracting from the player
                     if betAmount == currentPlayer.money and currentPlayer.status == 3:
@@ -175,7 +175,7 @@ while running:
                     elif currentPlayer.status == 3:
                         currentPlayer.money_calculation(betAmount)
                         pot = askPlayer(currentPlayer, betAmount, pot)
-                    max_bet = max_bet + betAmount
+                        max_bet += betAmount
 
                 # Iterating through all players until both conditions are met
                 playerIndex = playerIndex + 1
